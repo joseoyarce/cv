@@ -3,180 +3,236 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import React from 'react';
+import { motion } from 'motion/react';
+import { 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Linkedin, 
+  Github, 
+  ExternalLink, 
+  Download,
+  Briefcase,
+  GraduationCap,
+  Code2,
+  User,
+  ChevronRight
+} from 'lucide-react';
+
+const CV_DATA = {
+  name: "Jose Oyarce",
+  title: "Senior Full Stack Developer",
+  summary: "Desarrollador apasionado con más de 8 años de experiencia construyendo aplicaciones web escalables y de alto rendimiento. Especializado en ecosistemas React, Node.js y arquitecturas cloud. Enfocado en crear experiencias de usuario excepcionales y código mantenible.",
+  contact: {
+    email: "oyarce.agencia@gmail.com",
+    phone: "+56 9 1234 5678",
+    location: "Santiago, Chile",
+    linkedin: "linkedin.com/in/joseoyarce",
+    github: "github.com/joseoyarce"
+  },
+  experience: [
+    {
+      company: "Tech Solutions Global",
+      role: "Lead Frontend Developer",
+      period: "2021 - Presente",
+      description: "Liderazgo de equipo de 5 desarrolladores para la migración de una plataforma legacy a una arquitectura de micro-frontends con React y Vite.",
+      achievements: [
+        "Reducción del tiempo de carga inicial en un 40%.",
+        "Implementación de un sistema de diseño propio basado en Tailwind CSS.",
+        "Optimización de flujos de CI/CD reduciendo tiempos de despliegue en un 25%."
+      ]
+    },
+    {
+      company: "Digital Agency X",
+      role: "Senior Full Stack Developer",
+      period: "2018 - 2021",
+      description: "Desarrollo de soluciones e-commerce personalizadas para clientes internacionales utilizando Next.js y Shopify API.",
+      achievements: [
+        "Desarrollo de una pasarela de pagos integrada con múltiples proveedores locales.",
+        "Escalamiento de aplicaciones para soportar picos de tráfico de 100k+ usuarios concurrentes."
+      ]
+    }
+  ],
+  education: [
+    {
+      degree: "Ingeniería Civil en Informática",
+      institution: "Universidad de Chile",
+      period: "2013 - 2018"
+    }
+  ],
+  skills: {
+    frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    backend: ["Node.js", "Express", "PostgreSQL", "MongoDB", "GraphQL"],
+    tools: ["Docker", "AWS", "Git", "CI/CD", "Vite"]
+  }
+};
+
+const Section = ({ title, icon: Icon, children }: { title: string, icon: any, children: React.ReactNode }) => (
+  <motion.section 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5 }}
+    className="mb-16"
+  >
+    <div className="flex items-center gap-3 mb-8 border-b border-ink/10 pb-2">
+      <Icon className="w-6 h-6 text-accent" />
+      <h2 className="text-2xl font-serif font-bold tracking-tight uppercase">{title}</h2>
+    </div>
+    {children}
+  </motion.section>
+);
 
 export default function App() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1.1, 1.2]);
-
-  const revealVariants = {
-    hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      filter: "blur(0px)",
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] }
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-bg selection:bg-accent selection:text-black">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full flex justify-between items-center px-8 py-6 z-50 mix-blend-difference">
-        <div className="logo">
-          <img 
-            src="https://framerusercontent.com/assets/hrbRdqWrRntXB1ihOInXSTwA.svg" 
-            alt="Logo" 
-            className="h-6"
-            referrerPolicy="no-referrer"
-          />
-        </div>
-        <ul className="flex gap-8 list-none">
-          {["WORK", "ABOUT", "CONTACT"].map((item) => (
-            <li key={item}>
-              <a 
-                href={`#${item.toLowerCase()}`} 
-                className="text-white no-underline text-[13px] font-black tracking-widest hover:text-accent transition-colors"
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <div className="min-h-screen bg-paper selection:bg-accent/20 selection:text-accent">
+      {/* Hero Section */}
+      <header className="relative h-[70vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden border-b border-ink/5">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="z-10"
+        >
+          <span className="text-accent font-mono text-sm tracking-widest uppercase mb-4 block">Disponible para proyectos</span>
+          <h1 className="text-7xl md:text-9xl font-serif font-bold leading-[0.85] tracking-tighter mb-6">
+            {CV_DATA.name.split(' ')[0]}<br />
+            <span className="text-accent italic">{CV_DATA.name.split(' ')[1]}</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-ink/60 font-light max-w-2xl">
+            {CV_DATA.title}
+          </p>
+        </motion.div>
 
-      <main>
-        {/* Hero Section */}
-        <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-          <motion.div 
-            style={{ y, scale }}
-            className="absolute inset-0 z-[-1]"
-          >
-            <img 
-              src="https://framerusercontent.com/images/cKuTS8u7Z5a04Mq4liKz4JTSxiE.jpg" 
-              alt="Hero" 
-              className="w-full h-full object-cover brightness-[0.6]"
-              referrerPolicy="no-referrer"
-            />
-          </motion.div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-accent/5 -skew-x-12 translate-x-1/4 pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+      </header>
 
-          <motion.h1 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="text-[18vw] font-black tracking-[-0.06em] leading-[0.8] text-center"
-          >
-            <span className="text-accent">VER</span>TICAL
-          </motion.h1>
-          
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="absolute bottom-16 right-8 text-right max-w-[500px]"
-          >
-            <h3 className="text-accent text-4xl font-bold leading-none mb-2">I BREAK THINGS</h3>
-            <h3 className="text-white text-4xl font-bold leading-none mb-6">TO SEE WHAT THEY ARE MADE OF</h3>
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-accent text-xl font-bold">Adam Knoxville</span>
-              <span className="text-[11px] text-text-muted tracking-widest">VISUAL ARTIST / CREATOR</span>
-            </div>
-          </motion.div>
-        </section>
+      <main className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 py-24 grid grid-cols-1 lg:grid-cols-12 gap-16">
+        {/* Left Column: Main Content */}
+        <div className="lg:col-span-8">
+          <Section title="Sobre Mí" icon={User}>
+            <p className="text-lg text-ink/80 leading-relaxed">
+              {CV_DATA.summary}
+            </p>
+          </Section>
 
-        {/* Statement Section */}
-        <section id="about" className="px-8 py-32">
-          <motion.h2 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={revealVariants}
-            className="text-[clamp(32px,6vw,80px)] font-bold tracking-[-0.04em] max-w-[1400px] uppercase leading-tight"
-          >
-            ART IS A CONTROLLED INTERRUPTION. A PRACTICE OF CATCHING THE MOMENT <span className="text-text-muted">BEFORE IT DISAPPEARS.</span>
-          </motion.h2>
-        </section>
-
-        {/* Gallery Section */}
-        <section id="work" className="px-8 pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { src: "https://framerusercontent.com/images/eEXduufTWysqV1SPGfx1uvy19o.jpeg", title: "NEW YORK — 2025" },
-              { src: "https://framerusercontent.com/images/bAWwNVziCexjLuSRptw4jwUUQ.jpeg", title: "PARIS — 2023" },
-              { src: "https://framerusercontent.com/images/DA0Q8AgIJP81uFWvLkpKSZo.jpeg", title: "SINGAPORE — 2014" }
-            ].map((item, index) => (
-              <motion.div 
-                key={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                variants={revealVariants}
-                className="group"
-              >
-                <div className="overflow-hidden mb-4 aspect-[1/1.2]">
-                  <img 
-                    src={item.src} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
+          <Section title="Experiencia" icon={Briefcase}>
+            <div className="space-y-12">
+              {CV_DATA.experience.map((exp, i) => (
+                <div key={i} className="group">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold group-hover:text-accent transition-colors">{exp.role}</h3>
+                    <span className="font-mono text-sm text-ink/40">{exp.period}</span>
+                  </div>
+                  <p className="text-accent font-medium mb-4">{exp.company}</p>
+                  <p className="text-ink/70 mb-4">{exp.description}</p>
+                  <ul className="space-y-2">
+                    {exp.achievements.map((ach, j) => (
+                      <li key={j} className="flex items-start gap-2 text-sm text-ink/60">
+                        <ChevronRight className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                        <span>{ach}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <p className="font-mono text-xs text-text-muted">{item.title}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </Section>
 
-        {/* Featured Info Section */}
-        <section className="px-8 pb-32">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={revealVariants}
-            className="flex items-center gap-4"
-          >
-            <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.5)]" />
-            <p className="font-mono text-sm text-accent uppercase tracking-wider">LIVE EXHIBITION: TATE MODERN — LONDON</p>
-          </motion.div>
-        </section>
+          <Section title="Educación" icon={GraduationCap}>
+            <div className="space-y-8">
+              {CV_DATA.education.map((edu, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-lg font-bold">{edu.degree}</h3>
+                    <span className="font-mono text-sm text-ink/40">{edu.period}</span>
+                  </div>
+                  <p className="text-ink/60">{edu.institution}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+
+        {/* Right Column: Sidebar */}
+        <div className="lg:col-span-4 space-y-12">
+          {/* Contact Info */}
+          <div className="bg-ink/5 p-8 rounded-2xl border border-ink/5">
+            <h3 className="text-sm font-mono uppercase tracking-widest text-ink/40 mb-6">Contacto</h3>
+            <ul className="space-y-4">
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-accent" />
+                <a href={`mailto:${CV_DATA.contact.email}`} className="hover:text-accent transition-colors truncate">{CV_DATA.contact.email}</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-accent" />
+                <span>{CV_DATA.contact.phone}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-accent" />
+                <span>{CV_DATA.contact.location}</span>
+              </li>
+            </ul>
+            
+            <div className="mt-8 pt-8 border-t border-ink/10 flex gap-4">
+              <a href={`https://${CV_DATA.contact.linkedin}`} target="_blank" rel="noreferrer" className="p-2 bg-paper rounded-lg border border-ink/10 hover:border-accent hover:text-accent transition-all">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href={`https://${CV_DATA.contact.github}`} target="_blank" rel="noreferrer" className="p-2 bg-paper rounded-lg border border-ink/10 hover:border-accent hover:text-accent transition-all">
+                <Github className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div>
+            <h3 className="text-sm font-mono uppercase tracking-widest text-ink/40 mb-6 flex items-center gap-2">
+              <Code2 className="w-4 h-4" />
+              Habilidades
+            </h3>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-xs font-bold uppercase mb-3 text-ink/60">Frontend</h4>
+                <div className="flex flex-wrap gap-2">
+                  {CV_DATA.skills.frontend.map(s => (
+                    <span key={s} className="px-3 py-1 bg-accent/5 text-accent text-xs font-medium rounded-full border border-accent/10">{s}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-bold uppercase mb-3 text-ink/60">Backend</h4>
+                <div className="flex flex-wrap gap-2">
+                  {CV_DATA.skills.backend.map(s => (
+                    <span key={s} className="px-3 py-1 bg-ink/5 text-ink/70 text-xs font-medium rounded-full border border-ink/10">{s}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-bold uppercase mb-3 text-ink/60">Herramientas</h4>
+                <div className="flex flex-wrap gap-2">
+                  {CV_DATA.skills.tools.map(s => (
+                    <span key={s} className="px-3 py-1 bg-ink/5 text-ink/70 text-xs font-medium rounded-full border border-ink/10">{s}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          <button className="w-full py-4 bg-ink text-paper rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent transition-colors group shadow-xl shadow-ink/10">
+            <Download className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+            Descargar CV (PDF)
+          </button>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer id="contact" className="px-8 pt-24 pb-12 border-t border-border-dark">
-        <h2 className="text-[15vw] font-black text-border-dark leading-none mb-16 tracking-tighter">VERTICAL</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase">CONTACT</h4>
-            <p className="text-white">hey@adamknoxville.design</p>
-            <p className="text-white">(44) 7700 900 482</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase">LOCATION</h4>
-            <p className="text-white">Studio 204, Shoreditch</p>
-            <p className="text-white">London, United Kingdom</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase">SOCIAL</h4>
-            <div className="flex gap-4 text-white">
-              <a href="#" className="hover:text-accent transition-colors">Instagram</a>
-              <span>/</span>
-              <a href="#" className="hover:text-accent transition-colors">Youtube</a>
-              <span>/</span>
-              <a href="#" className="hover:text-accent transition-colors">X</a>
-            </div>
-          </div>
-        </div>
-        <p className="mt-24 text-[12px] text-text-muted">© 2026 VERTICAL BY ADAM KNOXVILLE. ALL RIGHTS RESERVED.</p>
+      <footer className="py-12 border-t border-ink/5 text-center text-ink/40 font-mono text-xs">
+        <p>© {new Date().getFullYear()} {CV_DATA.name} — Hecho con React & Tailwind</p>
       </footer>
     </div>
   );
